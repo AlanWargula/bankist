@@ -1,1 +1,3 @@
-# bankist
+Bankist
+
+- simple web-app
