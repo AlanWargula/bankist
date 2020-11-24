@@ -11,6 +11,7 @@ const tabs = document.querySelectorAll('.operations__tab');
 const tabsContainer = document.querySelector('.operations__tab-container');
 const tabsContent = document.querySelectorAll('.operations__content');
 const nav = document.querySelector('.nav__links')
+const navBar = document.querySelector('.nav')
 
 const openModal = function (e) {
   e.preventDefault();
@@ -48,6 +49,7 @@ document.querySelector('.btn--close-cookie').addEventListener('click', function 
 
 message.style.backgroundColor = '#37383d';
 message.style.width = '120%';
+message.style.height = '10%';
 
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
@@ -94,5 +96,41 @@ const handleHover = function (e) {
 }
 
 nav.addEventListener('mouseover', handleHover.bind(0.5));
-
 nav.addEventListener('mouseout', handleHover.bind(1));
+
+const navHeight = nav.getBoundingClientRect().height;
+
+const stickyNav = function (entries) {
+
+  const [entry] = entries;
+
+  if (!entry.isIntersecting)
+    navBar.classList.add('sticky');
+  else navBar.classList.remove('sticky');
+};
+
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight + 30}px`
+});
+headerObserver.observe(header);
+
+const allSections = document.querySelectorAll('.section')
+
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove('section--hidden');
+  observer.unobserve(entry.target);
+};
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15,
+});
+
+allSections.forEach(function (sec) {
+  sectionObserver.observe(sec);
+  sec.classList.add('section--hidden')
+});
